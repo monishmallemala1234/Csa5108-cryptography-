@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <string.h>
+void encryptVigenereOneTimePad(char *plaintext, int *keyStream, char *ciphertext) {
+    int len = strlen(plaintext);
+    for (int i = 0; i < len; i++) {
+        if ('A' <= plaintext[i] && plaintext[i] <= 'Z') {
+            ciphertext[i] = ((plaintext[i] - 'A' + keyStream[i]) % 26) + 'A';
+        } else {
+            ciphertext[i] = plaintext[i];
+        }
+    }
+    ciphertext[len] = '\0';
+}
+void findDecryptionKey(char *ciphertext, char *target, int *keyStream) {
+    int len = strlen(ciphertext);
+    for (int i = 0; i < len; i++) {
+        if ('A' <= ciphertext[i] && ciphertext[i] <= 'Z') {
+            keyStream[i] = (target[i] - ciphertext[i] + 26) % 26;
+        } else {
+            keyStream[i] = 0;
+        }
+    }
+}
+int main() {
+    char plaintext[] = "SENDMOREMONEY";
+    int keyStream[] = {9, 0, 1, 7, 23, 15, 21, 14, 11, 11, 2, 8, 9};
+    char ciphertext[50]; 
+
+    encryptVigenereOneTimePad(plaintext, keyStream, ciphertext);
+    printf("Encrypted Ciphertext: %s\n", ciphertext);
+    char target[] = "CASHNOTNEEDED";
+    int decryptionKey[50]; 
+    findDecryptionKey(ciphertext, target, decryptionKey);
+    printf("Decryption Key: ");
+    for (int i = 0; i < strlen(ciphertext); i++) {
+        printf("%d ", decryptionKey[i]);
+    }
+    printf("\n");
+    return 0;
+}
